@@ -2,7 +2,7 @@ from clase_pila import Pila
         
 def AnalizarParentesis (e:str)->list:
     """
-    Funcion que analiza la concordancia de paréntesis en una cadena
+    Funcion que analiza la concordancia de paréntesis en una cadena.
 
     Parameters
     ----------
@@ -15,16 +15,16 @@ def AnalizarParentesis (e:str)->list:
         Lista de errores.
 
     """
-    par = False
+    parentesis = False
     p = Pila()
     lista_errores = []
     for i in range(len(e)):
         if e[i] == "(":
             p.Apilar(i)
-            par = True
+            parentesis = True
         else:
             if e[i] == ")":
-                par = True
+                parentesis = True
                 try:
                     p.Desapilar()
                 except:
@@ -35,19 +35,23 @@ def AnalizarParentesis (e:str)->list:
             lista_errores.append("'(' no cerrado en "+str(p.Cima()))
             p.Desapilar()
 
-    return lista_errores, par
+    return lista_errores, parentesis
 
-def ValidarFicheroPython (n: str, l:list, e:list, parentesis:list) -> bool:
+def ValidarFicheroPython (n: str, l:list, e:list, p:list) -> bool:
     '''
     Función que lee las lineas de un fichero que contiene código Python 
     y valida la concordancia de paréntesis de cada una de estas líneas.
-    ---
-    Args:
-        n = nombre del fichero
-        l = lista con el numero de linea que contiene el error
-        e = lista de errores que hay en la linea
-    Return:
-        ok = indica si se abrio o no el fichero
+
+    Args
+    ------
+    n = nombre del fichero.
+    l = lista con el numero de linea que contiene el error.
+    e = lista de errores que hay en la linea.
+    p = lista con las lineas que contienen parentesis. 
+    
+    Return
+    ------
+    ok = indica si se abrio o no el fichero.
     '''
     ok = False
     try:
@@ -62,13 +66,12 @@ def ValidarFicheroPython (n: str, l:list, e:list, parentesis:list) -> bool:
         for linea in f:
             nlinea +=1
             linea = linea.rstrip("\n")
-            errores, p = AnalizarParentesis(linea)
+            errores, parentesis = AnalizarParentesis(linea)
+            if parentesis == True:
+                p.append(nlinea)
             if len(errores) > 0:
-                e.extend(AnalizarParentesis(linea))
+                e.extend(errores)
                 l.append(nlinea)
-            if p:
-                parentesis.append(nlinea)
-                
         f.close()
 
     return ok
@@ -78,16 +81,20 @@ def main():
     fname = 'test.py'
     lineas = list()
     errores = list()
-    parentesis = list() # de enteros
+    lparen = list()
 
-    if ValidarFicheroPython(fname, lineas, errores, parentesis):
-        print(len(lineas))
-        print(len(errores))
-        print(len(parentesis))
+    if ValidarFicheroPython(fname, lineas, errores, lparen):
         
-        #for i in range(len(errores)):
-        #    print('Línea ', lineas[i])
-            #print(errores[i])
+        print('---')
+        for i in range(len(errores)):
+            print('Línea ', lineas[i])
+            print(errores[i])
+        print()
+        print('---')
+        print('Líneas con paréntesis: ')
+        print(lparen)
+        print('---')
+        print()
 
 if __name__ == "__main__":
     main()    
