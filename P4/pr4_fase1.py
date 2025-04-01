@@ -1,4 +1,15 @@
+'''
+Previo de laboratorio 4.
+
+Analiza la corrección del uso de paréntesis “(“ y “)” en una cadena de texto.
+
+Autor: Carlos Martinez
+Fecha: 1/04/2025
+
+'''
+
 from clase_pila import Pila
+from clase_cola import Cola
         
 def AnalizarParentesis (e:str)->list:
     """
@@ -37,7 +48,7 @@ def AnalizarParentesis (e:str)->list:
 
     return lista_errores, parentesis
 
-def ValidarFicheroPython (n: str, l:list, e:list, p:list) -> bool:
+def ValidarFicheroPython (n: str, l:list, e:list, c:Cola) -> bool:
     '''
     Función que lee las lineas de un fichero que contiene código Python 
     y valida la concordancia de paréntesis de cada una de estas líneas.
@@ -45,9 +56,9 @@ def ValidarFicheroPython (n: str, l:list, e:list, p:list) -> bool:
     Args
     ------
     n = nombre del fichero.
-    l = lista con el numero de linea que contiene el error.
+    l = lista con los numeros de lineas que contienen un error.
     e = lista de errores que hay en la linea.
-    p = lista con las lineas que contienen parentesis. 
+    p = cola con las lineas que contienen parentesis. 
     
     Return
     ------
@@ -68,7 +79,7 @@ def ValidarFicheroPython (n: str, l:list, e:list, p:list) -> bool:
             linea = linea.rstrip("\n")
             errores, parentesis = AnalizarParentesis(linea)
             if parentesis == True:
-                p.append(nlinea)
+                c.Encolar(nlinea)
             if len(errores) > 0:
                 e.extend(errores)
                 l.append(nlinea)
@@ -78,23 +89,25 @@ def ValidarFicheroPython (n: str, l:list, e:list, p:list) -> bool:
 
 def main():
 
-    fname = 'test.py'
-    lineas = list()
-    errores = list()
-    lparen = list()
+    print(__doc__)
 
-    if ValidarFicheroPython(fname, lineas, errores, lparen):
+    fname = 'test.py' # Nombre del fichero
+    lineas = list() # Numeros de las lineas que contienen errores
+    errores = list() # Lista con los errores de las lineas
+    c = Cola() # Numeros de todas las lineas que tienen parentesis
+
+    if ValidarFicheroPython(fname, lineas, errores, c):
         
+        print('Listado de errores fichero: ', fname)
         print('---')
         for i in range(len(errores)):
             print('Línea ', lineas[i])
             print(errores[i])
-        print()
+        print('---')    
+        print('\nLíneas con paréntesis: ')
         print('---')
-        print('Líneas con paréntesis: ')
-        print(lparen)
-        print('---')
-        print()
+        print(c)
+        print('---\n')
 
 if __name__ == "__main__":
     main()    
