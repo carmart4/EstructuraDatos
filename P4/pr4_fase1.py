@@ -7,9 +7,9 @@ Autor: Carlos Martinez
 Fecha: 1/04/2025
 
 '''
-
 from clase_pila import Pila
 from clase_cola import Cola
+from clase_linea import Linea
         
 def AnalizarParentesis (e:str)->list:
     """
@@ -48,7 +48,7 @@ def AnalizarParentesis (e:str)->list:
 
     return lista_errores, parentesis
 
-def ValidarFicheroPython (n: str, l:list, e:list, c:Cola) -> bool:
+def ValidarFicheroPython (n: str, listalineas:list, c:Cola) -> bool:
     '''
     Función que lee las lineas de un fichero que contiene código Python 
     y valida la concordancia de paréntesis de cada una de estas líneas.
@@ -56,9 +56,8 @@ def ValidarFicheroPython (n: str, l:list, e:list, c:Cola) -> bool:
     Args
     ------
     n = nombre del fichero.
-    l = lista con los numeros de lineas que contienen un error.
-    e = lista de errores que hay en la linea.
-    p = cola con las lineas que contienen parentesis. 
+    listalineas = lista con objetos de la clase Linea.
+    c = cola con las lineas que contienen parentesis. 
     
     Return
     ------
@@ -79,35 +78,48 @@ def ValidarFicheroPython (n: str, l:list, e:list, c:Cola) -> bool:
             linea = linea.rstrip("\n")
             errores, parentesis = AnalizarParentesis(linea)
             if parentesis == True:
-                c.Encolar(nlinea)
+                    c.Encolar(nlinea)
             if len(errores) > 0:
-                e.extend(errores)
-                l.append(nlinea)
+                l = Linea()
+                l.AddNumeroLinea(nlinea)
+                l.AddErroresLinea(errores)
+                listalineas.append(l)
         f.close()
-
     return ok
+
+def Resultados(c:Cola, l:list):
+    '''
+    Funcion que imprime los resultados sobre 
+    las lineas que contienen errores.
+
+    Arg
+    ---
+    c = cola con las lineas con paréntesis
+    l = lista de objetos de la clase Linea
+    '''
+    print('Resultados')
+    print('==========')
+    print('*Lineas con paréntesis: ')
+    print(c)
+    print()
+    print('*Lineas con errores: ')
+    for e in l:
+        print(e)
+    print()
+    return
 
 def main():
 
     print(__doc__)
 
-    fname = 'test.py' # Nombre del fichero
-    lineas = list() # Numeros de las lineas que contienen errores
-    errores = list() # Lista con los errores de las lineas
-    c = Cola() # Numeros de todas las lineas que tienen parentesis
+    # Nombre del fichero a evaluar
+    fname = 'test.py' 
 
-    if ValidarFicheroPython(fname, lineas, errores, c):
-        
-        print('Listado de errores fichero: ', fname)
-        print('---')
-        for i in range(len(errores)):
-            print('Línea ', lineas[i])
-            print(errores[i])
-        print('---')    
-        print('\nLíneas con paréntesis: ')
-        print('---')
-        print(c)
-        print('---\n')
+    listalineas = list()
+    ColaParentesis = Cola()
+
+    if ValidarFicheroPython(fname, listalineas, ColaParentesis):
+        Resultados(ColaParentesis, listalineas)
 
 if __name__ == "__main__":
     main()    
