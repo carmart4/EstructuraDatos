@@ -33,6 +33,7 @@ def GenerarArbol(f) -> ArbolBinario:
         a = ArbolBinario(info= txt, subizq= i, subder= d)
     return a
 
+
 def EsHoja(a:ArbolBinario)->bool:
     '''
     Evalua si es una rama final del arbol. Es decir, 
@@ -52,6 +53,7 @@ def EsHoja(a:ArbolBinario)->bool:
         hoja = False
     return hoja
 
+
 def recorrer_prefijo(a:ArbolBinario):
     '''
     Funcion que recorre un arbol binario en orden prefijo.
@@ -66,10 +68,12 @@ def recorrer_prefijo(a:ArbolBinario):
         recorrer_prefijo(a.SubarbDer())
     return
 
+
 def Afirmativa(s:str)->bool:
     '''Verifica todos los 'si' posibles enn una expresion''' 
     opciones = ["sí","si","Sí","Si","SÍ","SI"]
     return s in opciones
+
 
 def Jugar(a:ArbolBinario):
     '''
@@ -83,6 +87,7 @@ def Jugar(a:ArbolBinario):
     '''
     while not EsHoja(a):
         resp = input("Pregunta: " + a.Raiz() + " (Sí/No) ") # Input por el usuario
+        
         if Afirmativa(resp):
             a = a.SubarbIzq()
         else: # lo que no sea afirmativo es negativo
@@ -90,6 +95,7 @@ def Jugar(a:ArbolBinario):
     print()
     print ("Respuesta:", a.Raiz())
     return
+
 
 def MostrarFormato(a:ArbolBinario, nivel=0, nivel_max=[0], hojas=[]):
     '''
@@ -149,11 +155,16 @@ def main():
 
     else:
         # Ejercicio 1.
-        #recorrer_prefijo(arbol)
+        print('Recorrido del arbol en prefijo: \n')
+        recorrer_prefijo(arbol)
+        print('-----')
 
         # Ejercicio 2.
-        #Jugar(arbol)
-
+        print('\nJuego para una sola persona: ')
+        Jugar(arbol)
+        print()
+        print('-----')
+        
         # Ejercicio 3.
         n = [0] # Debe ser en un dato mutable para saber la profundidad, niveles
         h = [] # Lista que contendra los valores de las hojas
